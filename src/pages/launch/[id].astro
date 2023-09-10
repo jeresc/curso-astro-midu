@@ -1,0 +1,42 @@
+---
+  import { getLaunchById } from '../../services/spacex'
+  import Layout from '../../layouts/Layout.astro'
+
+  export const prerender = false // server
+
+  const { id } = Astro.params
+  let launch
+
+  if (id) {
+    launch = await getLaunchById(id)
+  }
+
+  // cookies
+  // Astro.cookies.get("user") ? Astro.redirect("/") : Astro.redirect("/login")
+
+  {/*
+    import type { GetStaticPaths } from "astro";
+
+    export const getStaticPaths = ( async () => {
+      // this is the way to do it when pages have a known finite number of paths
+      // the other way to do when pages have an unkown number of paths it is using server side rendering outpout eg. when
+      // fetching tweets
+      const launches = await getLatestLaunches()
+      return launches.map(launch => ({
+        params: { id: launch.id },
+      }))
+    }) satisfies GetStaticPaths;
+  */}
+
+---
+
+<Layout title=`Launch ${launch?.id}`>
+  <article class="rounded-lg border shadow-md bg-gray-800 border-gray-700
+  hover:scale-105 hover:bg-gray-700 hover:border-gray-500 transition
+  flex flex-col max-w-lg items-center content-center p-4 gap-3 mx-auto">
+    <img class="w-52 h-auto" src={launch?.links.patch.small} alt={launch?.name}>
+    <h2 class="text-2xl text-white font-bold">Launch #{launch?.flight_number}</h2>
+    <p class="text-lg y-4">{launch?.details}</p>
+  </article>
+</Layout>
+
